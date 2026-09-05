@@ -1,0 +1,121 @@
+@import "@xyflow/react/dist/style.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Light & Dark Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #232838;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* React Flow Handles - Sleek Minimal Ports */
+.react-flow__handle {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  border: 2px solid #ffffff;
+  background: #3b82f6;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.dark .react-flow__handle {
+  border: 2px solid #090b10;
+  background: #60a5fa;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+.react-flow__handle:hover {
+  transform: scale(1.35);
+}
+
+/* React Flow Edges */
+.react-flow__edge-path {
+  stroke-width: 1.75px;
+  stroke: #94a3b8;
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+.dark .react-flow__edge-path {
+  stroke: #475569;
+}
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #2563eb !important;
+  stroke-width: 2.25px !important;
+}
+.dark .react-flow__edge.selected .react-flow__edge-path {
+  stroke: #60a5fa !important;
+  stroke-width: 2.25px !important;
+}
+
+/* MiniMap - Minimalist float */
+.react-flow__minimap {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.2s ease;
+}
+.dark .react-flow__minimap {
+  background: #11141e !important;
+  border: 1px solid #232838 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Controls - Compact pill buttons */
+.react-flow__controls {
+  border-radius: 10px !important;
+  overflow: hidden;
+  border: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06) !important;
+}
+.dark .react-flow__controls {
+  border: 1px solid #232838 !important;
+  background: #141722 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+.react-flow__controls-button {
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  fill: #64748b !important;
+  transition: all 0.15s ease !important;
+}
+.dark .react-flow__controls-button {
+  background: #141722 !important;
+  border-bottom: 1px solid #232838 !important;
+  fill: #94a3b8 !important;
+}
+.react-flow__controls-button:hover {
+  background: #f8fafc !important;
+  fill: #0f172a !important;
+}
+.dark .react-flow__controls-button:hover {
+  background: #1e2333 !important;
+  fill: #f8fafc !important;
+}
