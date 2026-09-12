@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Plus,
 } from 'lucide-react';
+import { useReactFlow } from '@xyflow/react';
 import { useWorkflowStore } from '../../store/useWorkflowStore';
 import { NodeType, WorkflowNodeData, CustomNode } from '../../types/workflow';
 
@@ -41,7 +42,7 @@ const PALETTE_ITEMS: PaletteItem[] = [
     icon: <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />,
     defaultData: {
       label: 'New Task',
-      role: 'Owner',
+      role: '',
     },
   },
   {
@@ -100,6 +101,7 @@ export const NodePalette: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const mode = useWorkflowStore((state) => state.mode);
   const addNode = useWorkflowStore((state) => state.addNode);
+  const { screenToFlowPosition } = useReactFlow();
 
   const onDragStart = (event: React.DragEvent, item: PaletteItem) => {
     event.dataTransfer.setData('application/reactflow', JSON.stringify(item));
@@ -107,8 +109,20 @@ export const NodePalette: React.FC = () => {
   };
 
   const handleQuickAdd = (item: PaletteItem) => {
-    const x = 300 + Math.floor(Math.random() * 80) - 40;
-    const y = 200 + Math.floor(Math.random() * 80) - 40;
+    // Calculate center of visible ReactFlow canvas viewport
+    const canvasEl = document.querySelector('.react-flow');
+    const rect = canvasEl?.getBoundingClientRect();
+    const centerX = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
+    const centerY = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
+
+    const flowPos = screenToFlowPosition({ x: centerX, y: centerY });
+    // Slight offset jitter snapped to grid (20px) so rapid consecutive additions don't overlap exactly
+    const jitterX = Math.round(((Math.random() - 0.5) * 60) / 20) * 20;
+    const jitterY = Math.round(((Math.random() - 0.5) * 60) / 20) * 20;
+
+    // Approximate node center offset (half of typical card width ~180px and height ~70px)
+    const x = Math.round((flowPos.x - 90 + jitterX) / 20) * 20;
+    const y = Math.round((flowPos.y - 35 + jitterY) / 20) * 20;
 
     const newNode: CustomNode = {
       id: `${item.type}-${Date.now()}`,
@@ -158,6 +172,8 @@ export const NodePalette: React.FC = () => {
             key={idx}
             draggable
             onDragStart={(e) => onDragStart(e, item)}
+            onDoubleClick={() => handleQuickAdd(item)}
+            title={collapsed ? item.label : "Drag to canvas or double-click to add"}
             className={`group relative flex items-center rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/60 hover:border-slate-300 dark:hover:border-slate-700 p-2 transition-all cursor-grab active:cursor-grabbing select-none shadow-xs ${
               collapsed ? 'justify-center' : 'gap-2.5'
             }`}
@@ -174,7 +190,10 @@ export const NodePalette: React.FC = () => {
 
             {!collapsed && (
               <button
-                onClick={() => handleQuickAdd(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleQuickAdd(item);
+                }}
                 title="Add to canvas"
                 className="opacity-0 group-hover:opacity-100 p-1 rounded-md text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all shrink-0"
               >

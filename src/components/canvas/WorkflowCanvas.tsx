@@ -8,7 +8,6 @@ import {
   ConnectionLineType,
   ConnectionMode,
   useReactFlow,
-  ReactFlowProvider,
 } from '@xyflow/react';
 import { useWorkflowStore } from '../../store/useWorkflowStore';
 import { nodeTypes } from './CustomNodes';
@@ -46,6 +45,8 @@ const WorkflowCanvasInner: React.FC = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const GRID_SIZE = 20;
+
   const onDrop = useCallback(
     (event: React.DragEvent) => {
       event.preventDefault();
@@ -55,10 +56,16 @@ const WorkflowCanvasInner: React.FC = () => {
 
       try {
         const item = JSON.parse(rawData);
-        const position = screenToFlowPosition({
+        const rawPosition = screenToFlowPosition({
           x: event.clientX,
           y: event.clientY,
         });
+
+        // Snap dropped position directly to grid intersection
+        const position = {
+          x: Math.round(rawPosition.x / GRID_SIZE) * GRID_SIZE,
+          y: Math.round(rawPosition.y / GRID_SIZE) * GRID_SIZE,
+        };
 
         const newNode: CustomNode = {
           id: `${item.type}-${Date.now()}`,
@@ -97,8 +104,8 @@ const WorkflowCanvasInner: React.FC = () => {
         onPaneClick={() => setSelectedNodeId(null)}
         fitView
         fitViewOptions={{ padding: 0.2 }}
-        snapToGrid={isStructured}
-        snapGrid={[16, 16]}
+        snapToGrid={true}
+        snapGrid={[GRID_SIZE, GRID_SIZE]}
         connectionMode={ConnectionMode.Loose}
         connectionLineType={
           isStructured ? ConnectionLineType.SmoothStep : ConnectionLineType.Bezier
@@ -115,7 +122,7 @@ const WorkflowCanvasInner: React.FC = () => {
       >
         <Background
           variant={isStructured ? BackgroundVariant.Dots : BackgroundVariant.Lines}
-          gap={isStructured ? 20 : 28}
+          gap={GRID_SIZE}
           size={isStructured ? 1.5 : 1}
           color={isDark ? '#1e2433' : '#cbd5e1'}
         />
@@ -168,9 +175,5 @@ const WorkflowCanvasInner: React.FC = () => {
 };
 
 export const WorkflowCanvas: React.FC = () => {
-  return (
-    <ReactFlowProvider>
-      <WorkflowCanvasInner />
-    </ReactFlowProvider>
-  );
+  return <WorkflowCanvasInner />;
 };

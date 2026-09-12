@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ReactFlowProvider } from '@xyflow/react';
 import { HeaderBar } from './components/header/HeaderBar';
 import { NodePalette } from './components/sidebar/NodePalette';
 import { WorkflowCanvas } from './components/canvas/WorkflowCanvas';
@@ -21,31 +22,33 @@ export const App: React.FC = () => {
   }, [theme]);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-slate-50 dark:bg-[#090b10] text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-200">
-      {/* Header bar with controls, mode toggle, theme switch & layout buttons */}
-      <HeaderBar
-        onOpenExport={() => setIsExportOpen(true)}
-        onOpenTemplates={() => setIsTemplatesOpen(true)}
-      />
+    <ReactFlowProvider>
+      <div className="h-screen w-screen flex flex-col bg-slate-50 dark:bg-[#090b10] text-slate-900 dark:text-slate-100 overflow-hidden transition-colors duration-200">
+        {/* Header bar with controls, mode toggle, theme switch & layout buttons */}
+        <HeaderBar
+          onOpenExport={() => setIsExportOpen(true)}
+          onOpenTemplates={() => setIsTemplatesOpen(true)}
+        />
 
-      {/* Main Workspace */}
-      <main className="flex-1 flex relative overflow-hidden">
-        {/* Left: Drag-and-drop Elements Palette */}
-        <NodePalette />
+        {/* Main Workspace */}
+        <main className="flex-1 flex relative overflow-hidden">
+          {/* Left: Drag-and-drop Elements Palette */}
+          <NodePalette />
 
-        {/* Center: React Flow Canvas */}
-        <div className="flex-1 relative h-full">
-          <WorkflowCanvas />
-        </div>
+          {/* Center: React Flow Canvas */}
+          <div className="flex-1 relative h-full">
+            <WorkflowCanvas />
+          </div>
 
-        {/* Right: Living SOP Inspector Drawer (opens when a node is selected) */}
-        <SOPDrawer />
-      </main>
+          {/* Right: Living SOP Inspector Drawer (opens when a node is selected) */}
+          <SOPDrawer />
+        </main>
 
-      {/* Modals */}
-      <ExportModal isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
-      <TemplatesModal isOpen={isTemplatesOpen} onClose={() => setIsTemplatesOpen(false)} />
-    </div>
+        {/* Modals */}
+        <ExportModal isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
+        <TemplatesModal isOpen={isTemplatesOpen} onClose={() => setIsTemplatesOpen(false)} />
+      </div>
+    </ReactFlowProvider>
   );
 };
 

@@ -7,7 +7,6 @@ import {
   HelpCircle,
   Database,
   Clock,
-  User,
 } from 'lucide-react';
 import { WorkflowNodeData } from '../../types/workflow';
 import { useWorkflowStore } from '../../store/useWorkflowStore';
@@ -119,11 +118,6 @@ export const TaskNode = memo(({ data, selected }: NodeProps) => {
             <h4 className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
               {nodeData.label || 'Task / Step'}
             </h4>
-            {nodeData.role && (
-              <span className="text-[10px] text-slate-400 dark:text-slate-500 truncate block">
-                {nodeData.role}
-              </span>
-            )}
           </div>
         </div>
       </div>
@@ -144,14 +138,6 @@ export const TaskNode = memo(({ data, selected }: NodeProps) => {
       <Handle type="source" position={Position.Top} id="top" className="!bg-blue-500 hover:!scale-150 transition-transform" />
       <Handle type="source" position={Position.Right} id="right" className="!bg-blue-500 hover:!scale-150 transition-transform" />
       <Handle type="source" position={Position.Bottom} id="bottom" className="!bg-blue-500 hover:!scale-150 transition-transform" />
-
-      {/* Role tag if present */}
-      {nodeData.role && (
-        <div className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium truncate max-w-[130px] bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-500/10 dark:text-blue-300 dark:border-blue-500/20 mb-1.5 w-fit">
-          <User className="w-2.5 h-2.5 shrink-0" />
-          <span className="truncate">{nodeData.role}</span>
-        </div>
-      )}
 
       {/* Title & Subtitle */}
       <div>
